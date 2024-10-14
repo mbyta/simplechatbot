@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "simplechatbot"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "simplechatbot", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+gradio = "^5.0.1"
+python-dotenv = "^1.0.1"
+instructor = "^1.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
