@@ -1,26 +1,26 @@
-from enum import StrEnum
 
-class OpenAiModel(StrEnum):
-    GPT_4O_MINI_LATEST = "gpt-4o-mini-2024-07-18"
+class LlmModels:
+    def __init__(self):
+        self.openai_models = {
+            "gpt-4o-mini-2024-07-18": "GPT-4o mini"
+        }
 
-class AnthropicModel(StrEnum):
-    CLAUDE_3_HAIKU_LATEST = "claude-3-haiku-20240307"
+        self.anthropic_models = {
+            "claude-3-haiku-20240307": "Claude 3 Haiku"
+        }
 
-class GoogleModel(StrEnum):
-    GEMINI_1_5_FLASH_LATEST = "gemini-1.5-flash-latest"
+        self.google_models = {
+            "gemini-1.5-flash-latest": "Gemini 1.5 Flash"
+        }
 
-def get_list_of_all_models() -> list[str]:
-    model_1 = [model.value for model in OpenAiModel]
-    model_2 = [model.value for model in AnthropicModel]
-    model_3 = [model.value for model in GoogleModel]
+    def get_all_models(self) -> dict[str, str]:
+        return { **self.openai_models, **self.anthropic_models, **self.google_models }
 
-    return model_1 + model_2 + model_3
+    def get_list_of_openai_models(self) -> list[str]:
+        return list(self.openai_models.keys())
 
-def get_list_of_openai_models() -> list[str]:
-    return [model.value for model in OpenAiModel]
+    def get_list_of_anthropic_models(self) -> list[str]:
+        return list(self.anthropic_models.keys())
 
-def get_list_of_anthropic_models() -> list[str]:
-    return [model.value for model in AnthropicModel]
-
-def get_list_of_google_models() -> list[str]:
-    return [model.value for model in GoogleModel]
+    def get_list_of_google_models(self) -> list[str]:
+        return list(self.google_models.keys())
