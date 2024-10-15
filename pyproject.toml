@@ -10,7 +10,7 @@ packages = [{include = "simplechatbot", from = "src"}]
 python = "^3.12"
 gradio = "^5.0.1"
 python-dotenv = "^1.0.1"
-instructor = "^1.5.2"
+instructor = {extras = ["anthropic", "google-generativeai"], version = "^1.5.2"}
 
 
 [build-system]
