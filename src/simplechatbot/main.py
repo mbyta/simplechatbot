@@ -2,6 +2,8 @@ import gradio as gr
 from api_clients.llm_models import LlmModels
 from api_clients.api_client import ApiClient
 import html
+from openai.types.chat import ChatCompletionAssistantMessageParam, ChatCompletionUserMessageParam
+from api_clients.llm_roles import LlmRole
 
 class SimpleChatbotApp:
     def __init__(self):
@@ -27,13 +29,12 @@ class SimpleChatbotApp:
         self.app = app
 
     def on_user_input_entered(self, user_input: gr.Textbox, selected_model: gr.Dropdown, chat_history: gr.Chatbot) -> list[str, gr.Chatbot]:
-        conversation_context = self.build_conversation_context(chat_history)
-        full_input = f"{conversation_context}\n{user_input}" if conversation_context else user_input
+        messages = self.build_messages(user_input, chat_history)
         api_client = ApiClient()
-        api_response = api_client.get_response(full_input, selected_model)
+        api_response = api_client.get_response(messages, selected_model)
 
-        chat_history.append({"role": "user", "content": html.escape(user_input)})
-        chat_history.append({"role": "assistant", "content": html.escape(api_response)})
+        chat_history.append({"role": LlmRole.USER, "content": html.escape(user_input)})
+        chat_history.append({"role": LlmRole.ASSISTANT, "content": html.escape(api_response)})
 
         return ["", chat_history]
 
@@ -42,7 +43,7 @@ class SimpleChatbotApp:
         llm_models = LlmModels()
 
         for k, v in llm_models.get_all_models().items():
-            options.append((v, k )) # (option label, option value)
+            options.append((v, k)) # (option label, option value)
 
         return options
 
@@ -50,29 +51,18 @@ class SimpleChatbotApp:
         is_value_selected = selected_value != ""
         return gr.update(interactive=is_value_selected), gr.update(interactive=is_value_selected)
 
-    def build_conversation_context(self, chat_history: gr.Chatbot):
-        conv_context = []
-        pair_counter = 0
-        conv_counter = 1
+    def build_messages(self, user_input: gr.Textbox, chat_history: gr.Chatbot):
+        messages = []
 
         for msg in chat_history:
-            content = ""
-
-            if msg["role"] == "user":
-                content = f"<query_{conv_counter}>{msg["content"]}</query_{conv_counter}>"
+            if msg["role"] == LlmRole.USER:
+                messages.append(ChatCompletionUserMessageParam(role=LlmRole.USER, content=msg["content"]))
             else:
-                content = f"<response_{conv_counter}>{msg["content"]}</response_{conv_counter}>"
+                messages.append(ChatCompletionAssistantMessageParam(role=LlmRole.ASSISTANT, content=msg["content"]))
 
-            conv_context.append(content)
-            pair_counter += 1
+        messages.append(ChatCompletionUserMessageParam(role=LlmRole.USER, content=user_input))
 
-            if pair_counter == 2:
-                pair_counter = 0
-                conv_counter += 1
-
-        result = "\n".join(conv_context)
-
-        return f"<context>{result}</context>" if result else ""
+        return messages
 
     def launch(self):
         self.app.launch()
