@@ -11,15 +11,14 @@ from openai.types.chat import ChatCompletionMessageParam
 load_dotenv()
 
 class OpenAiClient(BaseClient):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, selected_model: str):
+        super().__init__(selected_model)
         self.api_client = instructor.from_openai(OpenAI(api_key=os.getenv(ApiKeyName.OPENAI)))
 
-    def get_response(self, messages: list[ChatCompletionMessageParam], selected_model: str) -> str:
+    def get_response(self, messages: list[ChatCompletionMessageParam]):
         api_response = self.api_client.chat.completions.create(
-            model=selected_model,
+            model=self.selected_model,
             max_tokens=Constants.MAX_TOKEN,
-            #stream=True,
             response_model=GenericFormatResponseModel,
             messages=messages,
         )

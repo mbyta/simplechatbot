@@ -11,17 +11,17 @@ from openai.types.chat import ChatCompletionMessageParam
 load_dotenv()
 
 class GoogleClient(BaseClient):
-    def __init__(self):
+    def __init__(self, selected_model: str):
+        super().__init__(selected_model)
         genai.configure(api_key=os.getenv(ApiKeyName.GOOGLE))
-        self.api_client = instructor.from_gemini(client=genai.GenerativeModel(), mode=instructor.Mode.GEMINI_JSON)
+        self.api_client = instructor.from_gemini(
+            client=genai.GenerativeModel(
+                model_name=f"models/{self.selected_model}",
+                generation_config=genai.types.GenerationConfig(max_output_tokens=Constants.MAX_TOKEN)),
+            mode=instructor.Mode.GEMINI_JSON)
 
-    def get_response(self, messages: list[ChatCompletionMessageParam], selected_model: str) -> str:
-        self.api_client.client = genai.GenerativeModel(
-            model_name=f"models/{selected_model}-latest",
-            generation_config=genai.types.GenerationConfig(max_output_tokens=Constants.MAX_TOKEN))
-
+    def get_response(self, messages: list[ChatCompletionMessageParam]) -> str:
         api_response = self.api_client.messages.create(
-            #stream=True,
             response_model=GenericFormatResponseModel,
             messages=messages,
         )
