@@ -2,7 +2,7 @@
 class LlmModels:
     def __init__(self):
         self.openai_models = {
-            "gpt-4o-mini-2024-07-18": "GPT-4o mini"
+            "gpt-4o-mini": "GPT-4o mini"
         }
 
         self.anthropic_models = {
