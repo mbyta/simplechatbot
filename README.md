@@ -4,6 +4,9 @@
 [![Gradio Version](https://img.shields.io/badge/gradio-^5.0.1-green.svg)](https://gradio.app/)
 [![Poetry Version](https://img.shields.io/badge/poetry-1.8.3-orange.svg)](https://python-poetry.org/)
 
+<img src="./assets/model_selection.png" alt="Model selection" width="600" />
+<img src="./assets/conversation.png" alt="Conversation" width="600" />
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -12,7 +15,7 @@
 
 ## Introduction
 
-This chatbot leverages large language models (LLMs) from multiple providers (OpenAI, Anthropic, Google), allowing users to switch between different models seamlessly.
+This chatbot leverages large language models (LLMs) from multiple providers (OpenAI, Anthropic, Google), allowing users to switch between different models seamlessly.<br>It also keeps the conversation context during the chat.
 
 ## Installation
 
